@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Color Picker</title>
+    </head>
+    <body>
+        <h1 class="title">Color picker</h1>
+
+        <table id="nav">
+            <tr>
+                <th><a href="index.html">Homepage</a></th>
+                <th><a href="color_picker.html">Color picker</a></th>
+                <th><a href="2.html">2</a></th>
+                <th><a href="3.html">3</a></th>
+            </tr>
+        </table>
+
+        <div class="center">
+            <p>
+                Input an RGB combination to see what color it is.
+            </p>
+            <p>
+                Each number should be an integer in the range 0-255.
+            </p>
+        </div>
+        <div class="text-center">
+            <table id="colorpicker">
+                <tr>
+                    <td >R: <form><input id="R" type="text" value="255"></form></td>
+                    <td >G: <form><input id="G" type="text" value="255"></form></td>
+                    <td >B: <form><input id="B" type="text" value="255"></form></td>
+                </tr>
+            </table>
+            <button id="show">show</button>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td id="hexcode">#ffffff</td>
+                </tr>
+
+            </table>
+        </div>
+
+    </body>
+
+    <script>
+        document.querySelector('#show').onclick = function(){
+	        rvalue = document.querySelector('#R').value;
+	        gvalue = document.querySelector('#G').value;
+	        bvalue = document.querySelector('#B').value;
+
+            //console.log(rvalue);
+            //console.log(gvalue);
+            //console.log(bvalue);
+
+	        hexcolor = convertToHex(rvalue, gvalue, bvalue)
+            console.log('Return')
+            console.log(hexcolor)
+	        document.querySelector('body').style.backgroundColor = hexcolor;
+	        document.querySelector('#hexcode').innerHTML = hexcolor;
+	    }
+
+	    function convertToHex(rvalue, gvalue, bvalue){
+	        //hexvalue = 0x0;
+
+
+
+            // https://stackoverflow.com/questions/57803/how-to-convert-decimal-to-hexadecimal-in-javascript
+            // https://www.w3schools.com/jsref/jsref_parseint.asp
+            rDec = parseInt(rvalue, 10);
+            gDec = parseInt(gvalue, 10);
+            bDec = parseInt(bvalue, 10);
+
+            rHex = rDec.toString(16);
+            gHex = gDec.toString(16);
+            bHex = bDec.toString(16);
+
+            console.log(rHex);
+            console.log(gHex);
+            console.log(bHex);
+
+            // not the most efficient code
+            if (rHex.length < 2)
+            {
+                rHex = ('0' + rHex)
+            }
+            if (gHex.length < 2)
+            {
+                gHex = ('0' + gHex)
+            }
+            if (bHex.length < 2)
+            {
+                bHex = ('0' + bHex)
+            }
+
+
+
+            hexString = ('#' + rHex.toString() + gHex.toString() + bHex.toString());
+            console.log("hexString:");
+            console.log(hexString);
+
+            // hexvalue = parseInt(hexString, 16);
+            // console.log(hexvalue);
+
+	        return hexString;
+	    }
+
+    </script>
+
+</html>

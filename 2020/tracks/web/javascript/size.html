@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>
+			Hello!
+		</title>
+
+	</head>
+	<body>
+	    <p>This is some text.</p>
+        <select>
+            <option value="large">large text</option>
+            <option value="initial" selected>medium text</option>
+            <option value="small">small text</option>
+        </select>
+
+	</body>
+	<script>
+	    document.querySelector('select').onchange = function() {
+	        document.querySelector('p').style.fontSize = this.value;
+	    }
+
+
+	</script>
+</html>
