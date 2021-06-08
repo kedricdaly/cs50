@@ -78,11 +78,11 @@ int main(void)
 /*
  * calc_grade: compute the rounded readability score from known inputs
  * INPUTS:
- *   nLetters (int, req): number of letters from a passage
- *   nWords (int, req): number of words from a passage
- *   nSentences (int, req): number of sentences from a passage
+ *   nLetters (req, int): number of letters from a passage
+ *   nWords (req, int): number of words from a passage
+ *   nSentences (req, int: number of sentences from a passage
  * OUTPUT:
- *   round_score (int, req): rounded readability score indicating grade level
+ *   round_score (req, int): rounded readability score indicating grade level
  */
 int calc_grade(int nLetters, int nWords, int nSentences)
 {
