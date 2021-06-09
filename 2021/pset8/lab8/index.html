@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+
+        <script>
+
+            // Check questions
+// ------1---------2--------3---------4---------5---------6---------7---------8
+            function correctMC()
+            {
+                let button = document.querySelector('.correct');
+                button.style.backgroundColor = 'green';
+                let mcResponse = document.querySelector('#MC_response');
+                mcResponse.innerHTML = 'Correct!';
+                setTimeout(() => { button.style.backgroundColor = '#d9edff'; }, 2000);
+                setTimeout(() => { mcResponse.innerHTML = '';}, 2000);
+            }
+
+// ------1---------2--------3---------4---------5---------6---------7---------8
+            function incorrectMC()
+            {
+                this.style.backgroundColor = 'red';
+                let mcResponse = document.querySelector('#MC_response');
+                mcResponse.innerHTML = 'Incorrect.';
+                setTimeout(() => { this.style.backgroundColor = '#d9edff'; }, 2000);
+                setTimeout(() => { mcResponse.innerHTML = '';}, 2000);
+            }
+
+// ------1---------2--------3---------4---------5---------6---------7---------8
+
+            function verifyFR()
+            {
+                let inputBox = document.querySelector('#FR_input');
+                let checkValue = inputBox.value;
+                let fr_response = document.querySelector('#FR_response');
+                if (checkValue === '2009')
+                {
+                    fr_response.innerHTML = 'Correct!';
+                    inputBox.style.backgroundColor = 'green';
+                }
+                else
+                {
+                    fr_response.innerHTML = 'Incorrect.';
+                    inputBox.style.backgroundColor = 'red';
+                }
+                setTimeout(() => { inputBox.style.backgroundColor = '#ffffff';}, 2000);
+                setTimeout(() => { fr_response.innerHTML = '';}, 2000);
+
+            }
+
+
+// ------1---------2--------3---------4---------5---------6---------7---------8
+            function addListeners()
+            {
+                document.querySelector('#FR_button').addEventListener('click',verifyFR);
+                document.querySelector('.correct').addEventListener('click',correctMC);
+                buttons = document.querySelectorAll('.incorrect');
+                for (let i = 0; i < buttons.length; i++)
+                {
+                    buttons[i].addEventListener('click',incorrectMC);
+                }
+
+            }
+
+// ------1---------2--------3---------4---------5---------6---------7---------8
+            document.addEventListener('DOMContentLoaded', addListeners);
+
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="jumbotron">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+
+                <h3>What is the largest island in the world?</h3>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="submit" class="correct">Greenland</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="incorrect">Iceland</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="incorrect">Britain</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="incorrect">Hawaii</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="incorrect">Isle of Man</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="MC_response"></td></td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+
+                <h3>What year was Bitcoin launched?</h3>
+                    <input id="FR_input" autocomplete="off" placeholder="YYYY"> </input>
+                    <button id="FR_button">Check Answer</button>
+                </b>
+                <div>
+                    <p id="FR_response"></p>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
