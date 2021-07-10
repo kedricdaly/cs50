@@ -1,0 +1,45 @@
+.title
+{
+	text-align: center;
+	font-family: sans-serif;
+}
+
+#nav, #nav th
+{
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+#nav th
+{
+    text-align: center;
+    background-color: #ddd;
+}
+
+
+#hexcode
+{
+	background-color: white;
+}
+
+p
+{
+    background-color: white;
+}
+
+#colorpicker
+{
+    margin: auto;
+}
+
+table
+{
+    margin: auto;
+}
+
+.center
+{
+    text-align: center;
+}
+
