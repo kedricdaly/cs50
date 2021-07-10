@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell Stock
+{% endblock %}
+
+{% block main %}
+    <form action="/sell" method="post">
+        <div class="form-group">
+            <select autocomplete="off" autofocus class="form-control" name="symbol" type="select">
+                <option disabled="" selected="" value="">Symbol</option>
+                {% for stock in portfolio %}
+                    <option value="{{ stock['stock_symbol'] }}">{{ stock['stock_symbol'] }}</option>
+                {% endfor %}
+            </select>
+            <input autocomplete="off" class="form-control" name="shares" placeholder=100 type="text">
+        </div>
+        <button class="btn btn-danger" type="submit">Sell Stock</button>
+    </form>
+
+    </br>
+    </br>
+
+    <table class='table table-striped table-dark'>
+        <thead>
+            <th>Stock</th>
+            <th>Quantity</th>
+        </thead>
+        <tbody>
+        {% for stock in portfolio %}
+            <tr>
+                {% for column in stock %}
+                <td>
+                    {{ stock[column] }}
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+

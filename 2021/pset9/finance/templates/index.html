@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+    <h1>{{username}}'s Portfolio</h1>
+    </br>
+    </br>
+
+    <table class="table">
+        <thead class="thead dark">
+            <th>Available Cash</th>
+            <th>Stock value</th>
+            <th>Total Value</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ available_cash | usd }}</td>
+                <td>{{ total_stock_value | usd }}</td>
+                <td>{{ total | usd }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class='table table-striped table-dark'>
+        <thead>
+            <th>Stock</th>
+            <th>Quantity</th>
+            <th>Average Cost</th>
+            <th>Total Cost</th>
+            <th>Current Price</th>
+            <th>Current Value</th>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for column in row %}
+                <td>
+                    {{ row[column] | usd }}
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

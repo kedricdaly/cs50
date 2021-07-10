@@ -1,0 +1,12 @@
+{% extends "quote.html" %}
+
+{% block info %}
+
+    <div>
+        <!--- https://stackoverflow.com/questions/25373154/how-to-iterate-through-a-list-of-dictionaries-in-jinja-template --->
+        {% for key, value in stock.items() %}
+            <h3>{{key}}: {{value}}</h3>
+        {% endfor %}
+    </div>
+
+{% endblock %}
