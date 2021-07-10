@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h1>{{username}}'s History</h1>
+    </br>
+    </br>
+
+    <table class='table table-striped'>
+        <thead>
+            <!--- stock_symbol	purchase_price	quantity	timestamp --->
+            <th>Stock</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Timestamp</th>
+        </thead>
+        <tbody>
+        {% for stock in portfolio %}
+
+            {% if stock['quantity'] > 0 %}
+            <tr class="table-success">
+            {% elif stock['quantity'] < 0 %}
+            <tr class="table-danger">
+            {% endif %}
+                {% for column in stock %}
+                <td>
+
+                        {{ stock[column] | usd }}
+
+                </td>
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
