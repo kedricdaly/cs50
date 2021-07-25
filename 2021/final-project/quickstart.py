@@ -1,8 +1,8 @@
-#! /usr/bin/python
 
 from __future__ import print_function
 import os.path
 import sys
+import argparse
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -13,28 +13,17 @@ from timeit import default_timer as timer
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
-def main(max_messages=10):
-    """Shows basic usage of the Gmail API.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                './final-project/.secrets/credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+def main():
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--max_messages"
+                        , type=int
+                        , default=500
+                        , help="Maximum number of messages to search in rev. chron. order. Time is approximately 10 messages/second. Def: 500")
+    args = parser.parse_args()
+    max_messages = args.max_messages
 
-    service = build('gmail', 'v1', credentials=creds)
+    service = build_gmail_service()
 
     # Call the Gmail API
     msg_list = list_messages(service, max_messages=max_messages)
@@ -56,19 +45,20 @@ def main(max_messages=10):
     message_headers = []
     apiTimer = 0
     appendTimer = 0
+    BATCH_SIZE = 10
 
     if messages_found:
-        iMsg = 0;
+        iMsg = 1;
         for msg in msg_list:
             apiStart = timer()
             message = service.users().messages().get(userId='me', id=msg['id'], format='metadata', metadataHeaders=["Delivered-To"]).execute()
             apiEnd = timer()
             apiTimer += apiEnd - apiStart
-            if iMsg % 100 == 0:
-                print(".", end="")
-                if iMsg % 1000 == 0:
+            if iMsg % BATCH_SIZE == 0:
+                print(".", end="", flush=True)
+                if iMsg % (10 * BATCH_SIZE) == 0:
                     if iMsg > 0:
-                        print("\n",end="")
+                        print("{}\n".format(iMsg),end="", flush=True)
             #header = message.get('headers',[])
             appendStart = timer()
             # only append messages with a 'Delivered-To' header
@@ -79,8 +69,6 @@ def main(max_messages=10):
             iMsg += 1
             #if iMsg > 1:
             #    break
-    
-    iMsg = 0;
 
     email_list = map(lambda x: x[0]['value'].lower(), message_headers)
     unique_emails = list(set(email_list))
@@ -118,6 +106,30 @@ def main(max_messages=10):
     for key in email_dict.keys():
         print(key)
     """
+
+def build_gmail_service():
+    """Shows basic usage of the Gmail API.
+    """
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                './final-project/.secrets/credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
+
+    service = build('gmail', 'v1', credentials=creds)
+    return service
 
 
 
