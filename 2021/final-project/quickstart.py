@@ -1,7 +1,5 @@
-
 from __future__ import print_function
 import os.path
-import sys
 import argparse
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -19,55 +17,64 @@ def main():
     parser.add_argument("-m", "--max_messages"
                         , type=int
                         , default=500
-                        , help="Maximum number of messages to search in rev. chron. order. Time is approximately 10 messages/second. Def: 500")
+                        , help="Maximum number of messages to search in rev. \
+                                chron. order. Time is approximately 10 \
+                                messages/second. Def: 500")
     args = parser.parse_args()
     max_messages = args.max_messages
 
     service = build_gmail_service()
 
-    # Call the Gmail API
-    msg_list = list_messages(service, max_messages=max_messages)
+    # Call the Gmail API to generate a list of messages
+    msg_list = get_message_list(service, max_messages=max_messages)
 
-    messages_found = False;
     if msg_list:
-        messages_found = True
-   
-    message_headers = []
-    apiTimer = 0
-    appendTimer = 0
-    BATCH_SIZE = 10
+        message_headers = get_message_headers(service, msg_list)
+    else:
+        print("No messages found.")
+        return
+    
+    output_email_list(message_headers, len(msg_list))
 
-    if messages_found:
-        iMsg = 1;
-        for msg in msg_list:
-            apiStart = timer()
-            message = service.users().messages().get(userId='me', id=msg['id'], format='metadata', metadataHeaders=["Delivered-To"]).execute()
-            apiEnd = timer()
-            apiTimer += apiEnd - apiStart
-            if iMsg % BATCH_SIZE == 0:
-                print(".", end="", flush=True)
-                if iMsg % (10 * BATCH_SIZE) == 0:
-                    if iMsg > 0:
-                        print("{}\n".format(iMsg),end="", flush=True)
-            appendStart = timer()
-            # only append messages with a 'Delivered-To' header
-            if 'headers' in message['payload']:
-                message_headers.append(message['payload']['headers'])
-            appendEnd = timer()
-            appendTimer += appendEnd - appendStart
-            iMsg += 1
-
+def output_email_list(message_headers, nMessages):
     email_list = map(lambda x: x[0]['value'].lower(), message_headers)
     unique_emails = list(set(email_list))
     unique_emails.sort()
     print("\n", end="")
-    print(f"Identified {len(unique_emails)} unique emails in {len(msg_list)} messages: \n")
+    print(f"Identified {len(unique_emails)} unique emails in {nMessages} messages: \n")
     for email in unique_emails:
         print(email)
     
     print("\n", end="")
 
     input("Press enter to exit")
+
+def get_message_headers(service, msg_list):
+    message_headers = []
+    BATCH_SIZE = 10
+    apiTimer = 0
+    appendTimer = 0
+    iMsg = 1;
+
+    for msg in msg_list:
+        apiStart = timer()
+        message = service.users().messages().get(userId='me', id=msg['id'], format='metadata', metadataHeaders=["Delivered-To"]).execute()
+        apiEnd = timer()
+        apiTimer += apiEnd - apiStart
+        if iMsg % BATCH_SIZE == 0:
+            print(".", end="", flush=True)
+            if iMsg % (10 * BATCH_SIZE) == 0:
+                if iMsg > 0:
+                    print("{}\n".format(iMsg),end="", flush=True)
+        appendStart = timer()
+        # only append messages with a 'Delivered-To' header
+        if 'headers' in message['payload']:
+            message_headers.append(message['payload']['headers'])
+        appendEnd = timer()
+        appendTimer += appendEnd - appendStart
+        iMsg += 1
+
+    return message_headers
 
 def build_gmail_service():
     """Shows basic usage of the Gmail API.
@@ -95,7 +102,7 @@ def build_gmail_service():
 
 
 
-def list_messages(service, max_messages=500):
+def get_message_list(service, max_messages=500):
     # looping adapted from: https://stackoverflow.com/questions/57733991/get-all-emails-with-google-python-api-client
     if max_messages >= 500:
         results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True).execute()
