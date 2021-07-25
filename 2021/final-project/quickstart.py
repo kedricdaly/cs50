@@ -1,19 +1,19 @@
+#! /usr/bin/python
+
 from __future__ import print_function
 import os.path
-import re
+import sys
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from timeit import default_timer as timer
-import requests as req
-import time
 
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
-def main():
+def main(max_messages=10):
     """Shows basic usage of the Gmail API.
     """
     creds = None
@@ -37,7 +37,7 @@ def main():
     service = build('gmail', 'v1', credentials=creds)
 
     # Call the Gmail API
-    msg_list = list_messages(service)
+    msg_list = list_messages(service, max_messages=max_messages)
 
     messages_found = False;
     if msg_list:
@@ -64,6 +64,11 @@ def main():
             message = service.users().messages().get(userId='me', id=msg['id'], format='metadata', metadataHeaders=["Delivered-To"]).execute()
             apiEnd = timer()
             apiTimer += apiEnd - apiStart
+            if iMsg % 100 == 0:
+                print(".", end="")
+                if iMsg % 1000 == 0:
+                    if iMsg > 0:
+                        print("\n",end="")
             #header = message.get('headers',[])
             appendStart = timer()
             # only append messages with a 'Delivered-To' header
@@ -71,7 +76,7 @@ def main():
                 message_headers.append(message['payload']['headers'])
             appendEnd = timer()
             appendTimer += appendEnd - appendStart
-            #iMsg += 1
+            iMsg += 1
             #if iMsg > 1:
             #    break
     
@@ -80,11 +85,14 @@ def main():
     email_list = map(lambda x: x[0]['value'].lower(), message_headers)
     unique_emails = list(set(email_list))
     unique_emails.sort()
+    print("\n", end="")
     print(f"Identified {len(unique_emails)} unique emails in {len(msg_list)} messages: \n")
     for email in unique_emails:
         print(email)
     
     print("\n", end="")
+
+    input("Press enter to exit")
 
     """
     for msg in message_headers:
@@ -113,39 +121,40 @@ def main():
 
 
 
-def list_messages(service):
+def list_messages(service, max_messages=1000):
     # looping adapted from: https://stackoverflow.com/questions/57733991/get-all-emails-with-google-python-api-client
-    MAX_MESSAGES = 10000
     query = 'not in:sent' # omit sent messages
-    results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True).execute()
+    if max_messages >= 500:
+        results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True).execute()
+    else:
+        results = service.users().messages().list(userId='me', maxResults=max_messages, includeSpamTrash=True).execute()
     msg_list = results.get('messages',[])
+
+    if len(msg_list) >= max_messages:
+        return msg_list
 
     nextPageToken = None
     if "nextPageToken" in results:
         nextPageToken = results['nextPageToken']
 
+    remaining_messages = max_messages - len(msg_list)
+
     while nextPageToken:
-        results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True, pageToken=nextPageToken).execute()
+        if remaining_messages >= 500:
+            results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True, pageToken=nextPageToken).execute()
+        else:
+            results = service.users().messages().list(userId='me', maxResults=remaining_messages, includeSpamTrash=True, pageToken=nextPageToken).execute()
+
         new_msg_list = results.get('messages',[])
         msg_list.extend(new_msg_list)
-        if len(msg_list) >= MAX_MESSAGES:
+        if len(msg_list) >= max_messages:
             break
         if 'nextPageToken' in results:
             nextPageToken = results['nextPageToken']
         else:
             break
-    #nextPageToken = results.get('nextPageToken')
-    #print("nextPageToken: %s" % nextPageToken)
-    #results2 = service.users().messages().list(userId='me', pageToken=nextPageToken, maxResults=500, includeSpamTrash=True).execute()
-    #msg_list2 = results2.get('messages',[])
-    #thirdPageToken = results2.get('nextPageToken')
-    #print("thirdPageToken: %s" % thirdPageToken)
-    #print('msg_list:\n')
-    #msg_list.extend(msg_list2)
-    #print("Len msg_list: %d" % len(msg_list))
-    return msg_list
-    #print(msg_list)
-    
+
+    return msg_list  
 
 # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
 def find_between(s, start, end):
