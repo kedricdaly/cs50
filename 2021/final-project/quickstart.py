@@ -31,17 +31,7 @@ def main():
     messages_found = False;
     if msg_list:
         messages_found = True
-    """
-    if not msg_list:
-        print('No messages found.')
-    else:
-        print('Message list:')
-        messages_found = True;
-        for msg in msg_list:
-            print(msg['id'])
-    """
-
-    email_dict = {}
+   
     message_headers = []
     apiTimer = 0
     appendTimer = 0
@@ -59,7 +49,6 @@ def main():
                 if iMsg % (10 * BATCH_SIZE) == 0:
                     if iMsg > 0:
                         print("{}\n".format(iMsg),end="", flush=True)
-            #header = message.get('headers',[])
             appendStart = timer()
             # only append messages with a 'Delivered-To' header
             if 'headers' in message['payload']:
@@ -67,8 +56,6 @@ def main():
             appendEnd = timer()
             appendTimer += appendEnd - appendStart
             iMsg += 1
-            #if iMsg > 1:
-            #    break
 
     email_list = map(lambda x: x[0]['value'].lower(), message_headers)
     unique_emails = list(set(email_list))
@@ -81,31 +68,6 @@ def main():
     print("\n", end="")
 
     input("Press enter to exit")
-
-    """
-    for msg in message_headers:
-        if iMsg % 79 == 0:
-            print(".", end="")
-            #print("\n")
-        for header in msg:
-            # underlying_dict = header[0]
-            if header['name'] == 'Delivered-To':
-                email_dict[header['value'].lower()] = 1
-                break
-            #elif header['name'] == 'To':
-            # This was only being used for sent messages, and we want to skip sent messages
-            #    email_val = find_between(header['value'],'<','>')
-            #    email_dict[email_val.lower()] = 1
-            #    break
-            else:
-                # unknown delivery address
-                a = 1
-    
-    # print out list of unique addresses (keys in the email_dict dictionary)
-    print("\n")
-    for key in email_dict.keys():
-        print(key)
-    """
 
 def build_gmail_service():
     """Shows basic usage of the Gmail API.
@@ -133,9 +95,8 @@ def build_gmail_service():
 
 
 
-def list_messages(service, max_messages=1000):
+def list_messages(service, max_messages=500):
     # looping adapted from: https://stackoverflow.com/questions/57733991/get-all-emails-with-google-python-api-client
-    query = 'not in:sent' # omit sent messages
     if max_messages >= 500:
         results = service.users().messages().list(userId='me', maxResults=500, includeSpamTrash=True).execute()
     else:
@@ -166,14 +127,7 @@ def list_messages(service, max_messages=1000):
         else:
             break
 
-    return msg_list  
-
-# https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
-def find_between(s, start, end):
-    try:
-        return (s.split(start))[1].split(end)[0]
-    except:
-        return s
+    return msg_list
 
 if __name__ == '__main__':
     main()
