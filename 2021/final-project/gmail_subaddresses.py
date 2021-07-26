@@ -7,6 +7,7 @@ from build_gmail_service import build_gmail_service
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
+# -------1---------2---------3---------4---------5---------6---------7---------8
 def main():
     
     parser = argparse.ArgumentParser()
@@ -16,8 +17,12 @@ def main():
                         , help="Maximum number of messages to search in rev. \
                                 chron. order. Time is approximately 10 \
                                 messages/second. Def: 500")
+    parser.add_argument("-s", "--save_path"
+                        , help="Saves a .txt file with unique emails to this provided fullpath. Creates dir if necessary"
+                        )
     args = parser.parse_args()
     max_messages = args.max_messages
+    save_path = args.save_path
 
     service = build_gmail_service()
 
@@ -30,21 +35,41 @@ def main():
         print("No messages found.")
         return
     
-    output_email_list(message_headers, len(msg_list))
+    output_email_list(message_headers, len(msg_list), save_path)
 
-def output_email_list(message_headers, nMessages):
+
+# -------1---------2---------3---------4---------5---------6---------7---------8
+def output_email_list(message_headers, nMessages, save_filepath=False):
     email_list = map(lambda x: x[0]['value'].lower(), message_headers)
     unique_emails = list(set(email_list))
     unique_emails.sort()
-    print("\n", end="")
-    print(f"Identified {len(unique_emails)} unique emails in {nMessages} messages: \n")
-    for email in unique_emails:
-        print(email)
-    
-    print("\n", end="")
 
-    input("Press enter to exit")
+    header_text = f"Identified {len(unique_emails)} unique emails in {nMessages} messages: \n"
 
+    if save_filepath:
+        fileparts = os.path.split(save_filepath)
+        if not os.path.exists(fileparts[0]):
+            # mkdir
+            os.makedirs(fileparts[0], exist_ok=True)  
+            
+        # write to .txt
+        with open(save_filepath, 'w') as f:
+            f.write(header_text)
+            for email in unique_emails:
+                f.write("%s\n" % email)
+        print("\nSaved {}".format(save_filepath))
+    else:
+        print("\n", end="")
+        print(header_text)
+        for email in unique_emails:
+            print(email)
+        
+        print("\n", end="")
+
+        input("Press enter to exit")
+
+
+# -------1---------2---------3---------4---------5---------6---------7---------8
 def get_message_headers(service, msg_list):
     message_headers = []
     BATCH_SIZE = 10
@@ -73,6 +98,7 @@ def get_message_headers(service, msg_list):
     return message_headers
 
 
+# -------1---------2---------3---------4---------5---------6---------7---------8
 def get_message_list(service, max_messages=500):
     # looping adapted from: https://stackoverflow.com/questions/57733991/get-all-emails-with-google-python-api-client
     if max_messages >= 500:
@@ -107,5 +133,6 @@ def get_message_list(service, max_messages=500):
 
     return msg_list
 
+# -------1---------2---------3---------4---------5---------6---------7---------8
 if __name__ == '__main__':
     main()
