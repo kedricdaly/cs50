@@ -59,7 +59,7 @@ python gmail_subaddresses.py -s [save path]
 * Sometimes the generated token does not properly allow for a refresh at a later time. You should be able to delete the token.json file to re-trigger the Google OAuth flow authorization
 * Due to API limits, the tested rate was ~ 100 emails/sec
 ```
-command to run if program contains helper info
+python gmail_subaddresses.py -h
 ```
 
 ## Authors
