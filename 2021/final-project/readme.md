@@ -18,10 +18,10 @@ of all of your subaddresses. Due to limitations with the HIBP API, this script w
 ### Dependencies
 
 * Python 3.0+
-* * I have not tested on all versions and use different print methods for learning.
+  * I have not tested on all versions and use different print methods for learning.
 * The [pip](https://pypi.python.org/pypi/pip) package management tool
 * A Google Cloud Platform project with the gmail readonly API enabled.
-* * You can follow the [Gmail API Python Quickstart](https://developers.google.com/gmail/api/quickstart/python) to create the python app.
+  * You can follow the [Gmail API Python Quickstart](https://developers.google.com/gmail/api/quickstart/python) to create the python app.
 * Authorization credentials for a desktop application. To learn how to create credentials for a desktop application, refer to [Create credentials](https://developers.google.com/workspace/guides/create-credentials).
 * A Google account with Gmail enabled.
 
@@ -30,11 +30,11 @@ Note: some (most) of these steps are copied directly from the Gmail API Python q
 ### Installing
 
 * Download the python files from the github repository via your preferred method.
-* * There's only two files at time of this writing
+  * There's only two files at time of this writing
 * You will need to create a folder within the directory of the repo install titled '.secrets' i.e. './.secrets'
-* * This will be where you store your credentials.json file that is downloaded during [Create credentials](https://developers.google.com/workspace/guides/create-credentials)
-* * You may need to change the ```token_fullpath ``` and ```cred_fullpath``` in ```build_gmail_service.py``` variables to ensure they are correct on your system
-* *  * The token file will be created after the Google OAuth flow
+  * This will be where you store your credentials.json file that is downloaded during [Create credentials](https://developers.google.com/workspace/guides/create-credentials)
+  * You may need to change the ```token_fullpath ``` and ```cred_fullpath``` in ```build_gmail_service.py``` variables to ensure they are correct on your system
+    * The token file will be created after the Google OAuth flow
 
 ### Executing program
 
@@ -66,8 +66,7 @@ python gmail_subaddresses.py -h
 
 Contributors names and contact info
 
-ex. Kedric Daly 
-ex. [@kedricdaly](https://twitter.com/kedricdaly)
+Kedric Daly 
 
 ## Version History
 
@@ -81,9 +80,5 @@ This project is licensed under the [NAME HERE] License - see the LICENSE.md file
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
-* [DomPizzie](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+* [DomPizzie](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc) (readme)
+* [Google Gmail API python quickstart](https://developers.google.com/gmail/api/quickstart/python)
