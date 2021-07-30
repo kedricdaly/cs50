@@ -64,8 +64,6 @@ python gmail_subaddresses.py -h
 
 ## Authors
 
-Contributors names and contact info
-
 Kedric Daly 
 
 ## Version History
