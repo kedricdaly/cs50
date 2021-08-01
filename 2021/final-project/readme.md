@@ -77,6 +77,5 @@ This project is licensed under the [NAME HERE] License - see the LICENSE.md file
 
 ## Acknowledgments
 
-Inspiration, code snippets, etc.
 * [DomPizzie](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc) (readme)
 * [Google Gmail API python quickstart](https://developers.google.com/gmail/api/quickstart/python)
