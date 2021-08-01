@@ -7,7 +7,7 @@ Python script using Gmail API to list subaddresses that are still in your inbox.
 Gmail and other email clients have the ability to use the '+' sign to create different addresses that all lead to the same email.
 E.g. myemail@gmail.com and myemail+potentialSpamSite@gmail.com lead to the same email: myemail@gmail.com.
 Similarly, any number of '.' characters can be inserted between letters.
-E.g. my.email.gmail.com, m.y.e.m.a.i.l@gmail.com both lead to the same email: myemail@gmail.com
+E.g. my.email@gmail.com, m.y.e.m.a.i.l@gmail.com both lead to the same email: myemail@gmail.com
 
 Using these are great for creating filters so you can send email directly to trash, or to see who may have sold your information to a third party.
 However, if you want to check all of these potential subaddresses for password/email breaches (e.g. using haveibeenpwned.com) it can be difficult unless you keep a list
@@ -18,7 +18,7 @@ of all of your subaddresses. Due to limitations with the HIBP API, this script w
 ### Dependencies
 
 * Python 3.0+
-  * I have not tested on all versions and use different print methods for learning.
+  * I have not tested on all versions and used different print methods for learning.
 * The [pip](https://pypi.python.org/pypi/pip) package management tool
 * A Google Cloud Platform project with the gmail readonly API enabled.
   * You can follow the [Gmail API Python Quickstart](https://developers.google.com/gmail/api/quickstart/python) to create the python app.
