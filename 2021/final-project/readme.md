@@ -43,6 +43,7 @@ Note: some (most) of these steps are copied directly from the Gmail API Python q
 ```
 python gmail_subaddresses.py
 ```
+By deafult, only the first 500 messges are searched.
 
 * Command line parameters:
 * * Max Messages: search for only this many messages in reverse-chronological order
@@ -57,7 +58,7 @@ python gmail_subaddresses.py -s [save path]
 ## Help
 
 * Sometimes the generated token does not properly allow for a refresh at a later time. You should be able to delete the token.json file to re-trigger the Google OAuth flow authorization
-* Due to API limits, the tested rate was ~ 100 emails/sec
+* Due to API limits, the tested rate was ~ 10 emails/sec
 ```
 python gmail_subaddresses.py -h
 ```
