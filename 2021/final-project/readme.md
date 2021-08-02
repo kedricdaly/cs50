@@ -1,4 +1,4 @@
-# Gmail Subaddresses
+# Gmail Aliases
 
 Python script using Gmail API to list subaddresses that are still in your inbox.
 
@@ -41,18 +41,18 @@ Note: some (most) of these steps are copied directly from the Gmail API Python q
 * Open a terminal
 * Execute the main file:
 ```
-python gmail_subaddresses.py
+python gmail_aliases.py
 ```
 By deafult, only the first 500 messges are searched.
 
 * Command line parameters:
 * * Max Messages: search for only this many messages in reverse-chronological order
 ```
-python gmail_subaddresses.py -m [max messages]
+python gmail_aliases.py -m [max messages]
 ```
 * * save path: save output of script to a text file
 ```
-python gmail_subaddresses.py -s [save path]
+python gmail_aliases.py -s [save path]
 ```
 
 ## Help
@@ -60,7 +60,7 @@ python gmail_subaddresses.py -s [save path]
 * Sometimes the generated token does not properly allow for a refresh at a later time. You should be able to delete the token.json file to re-trigger the Google OAuth flow authorization
 * Due to API limits, the tested rate was ~ 10 emails/sec
 ```
-python gmail_subaddresses.py -h
+python gmail_aliases.py -h
 ```
 
 ## Authors
